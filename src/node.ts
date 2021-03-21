@@ -3,7 +3,7 @@ import { Arguments } from "yargs";
 import { buildImage } from './build';
 import { writeDockerfile } from './docker-file';
 
-export function buildNodeImage(options: {
+export async function buildNodeImage(options: {
     cwd: string,
     argv: Arguments
 }): Promise<void> {
@@ -31,10 +31,14 @@ export function buildNodeImage(options: {
     }
 
     const dockerFile = `${_docker}/Dockerfile`;
-    return writeDockerfile(dockerFile, {
-        baseImage: (argv.from as string) || 'node:14.10.1-alpine3.12',
-        workDir: (argv.workDir as string) || '/app',
-        entryPoint: `[ "node", "${argv?.script || '.'}" ]`,
-        files
-    }).then(() => buildImage({ cwd, argv, dockerFile }));
+    try {
+        await writeDockerfile(dockerFile, {
+            baseImage: (argv.from as string) || 'node:14.10.1-alpine3.12',
+            workDir: (argv.workDir as string) || '/app',
+            entryPoint: `[ "node", "${argv?.script || '.'}" ]`,
+            files
+        }).then(() => buildImage({ cwd, argv, dockerFile }));
+    } finally {
+        shell.rm('-rf', _docker);
+    }
 }
