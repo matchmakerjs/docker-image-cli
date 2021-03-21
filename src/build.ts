@@ -1,10 +1,11 @@
 import * as path from 'path';
 import * as shell from "shelljs";
+import { Arguments } from 'yargs';
 
 export function buildImage(options: {
     dockerFile: string,
     cwd: string,
-    argv: any
+    argv: Arguments
 }) {
     const argv = options.argv;
     const cwd = options.cwd;

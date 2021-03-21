@@ -20,7 +20,13 @@ yargs(process.argv.slice(2))
     })
     .option('tag', {
         alias: 't',
-        type: 'array',
+        type: 'string',
         description: 'The image to use'
+    })
+    .option('copy', {
+        alias: 'c',
+        type: 'array',
+        description: 'Files to include in the image',
+        default: 'dist'
     })
     .argv;
