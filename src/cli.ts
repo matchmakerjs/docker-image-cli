@@ -16,7 +16,8 @@ yargs(process.argv.slice(2))
     )
     .option('from', {
         type: 'string',
-        description: 'The base image to use'
+        description: 'The base image to use',
+        default: 'node:14.10.1-alpine3.12'
     })
     .option('tag', {
         alias: 't',
