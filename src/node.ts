@@ -18,7 +18,6 @@ export async function buildNodeImage(options: {
     shell.cp(cwd + '/.npmrc', _docker);
     shell.cd(_docker);
     shell.exec('npm i --production --prefer-offline');
-    shell.rm('-rf', cwd + '/.npmrc');
 
     const files = [
         ['.docker/node_modules', 'node_modules/'],
