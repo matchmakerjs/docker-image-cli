@@ -2,6 +2,7 @@ import * as shell from "shelljs";
 import { Arguments } from "yargs";
 import { buildImage } from './build';
 import { writeDockerfile } from './docker-file';
+import * as fs from "fs";
 
 export async function buildNodeImage(options: {
     cwd: string,
@@ -11,13 +12,23 @@ export async function buildNodeImage(options: {
     const argv = options.argv
     const cwd = options.cwd;
 
-    const _docker = cwd + '/.docker';
+    const _docker = cwd + `/.docker_${process.hrtime.bigint()}`;
     shell.rm('-rf', _docker + '/*');
     shell.mkdir(_docker);
-    shell.cp(cwd + '/package.json', _docker);
+
+    const buffer = fs.readFileSync(cwd + '/package.json');
+    const packageJson = JSON.parse(buffer.toString());
+    delete packageJson.devDependencies;
+    fs.writeFileSync(_docker + '/package.json', JSON.stringify(packageJson));
+
+    // shell.cp(cwd + '/package.json', _docker);
+
     shell.cp(cwd + '/.npmrc', _docker);
     shell.cd(_docker);
+
+    const installStartTime = process.hrtime.bigint();
     shell.exec('npm i --production --prefer-offline');
+    const installEndTime = process.hrtime.bigint();
 
     const files = [
         ['.docker/node_modules', 'node_modules/'],
@@ -39,9 +50,12 @@ export async function buildNodeImage(options: {
             workDir: (argv.workDir as string) || '/app',
             entryPoint: `[ "node", "${argv?.script || '.'}" ]`,
             files
-        }).then(() => buildImage({ cwd, argv, dockerFile }));
+        });
+        await buildImage({ cwd, argv, dockerFile });
     } finally {
         shell.rm('-rf', _docker);
-        console.log(`Time taken: ${Number(process.hrtime.bigint() - startTime) / 1000000}ms`)
+        const npmICost = Number(installEndTime - installStartTime);
+        const totalCost = Number(process.hrtime.bigint() - startTime);
+        console.log(`Time taken: ${totalCost / 1000000}ms (npm i: ${npmICost / 1000000}ms)`);
     }
 }
