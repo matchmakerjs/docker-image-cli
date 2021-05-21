@@ -3,6 +3,7 @@ import { Arguments } from "yargs";
 import { buildImage } from './build';
 import { writeDockerfile } from './docker-file';
 import * as fs from "fs";
+import * as path from "path";
 
 export async function buildNodeImage(options: {
     cwd: string,
@@ -31,7 +32,7 @@ export async function buildNodeImage(options: {
     const installEndTime = process.hrtime.bigint();
 
     const files = [
-        ['.docker/node_modules', 'node_modules/'],
+        [`${path.relative(cwd, _docker)}/node_modules/`, 'node_modules/'],
         ['package.json', 'package.json']
     ]
 
