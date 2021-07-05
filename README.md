@@ -17,7 +17,13 @@ npm i @olaleyeone/docker-image -D
 $ npx docker-image
 ```
 
-### Without base image and tag
+### With tag
+
+```bash
+$ npx docker-image -t my-image
+```
+
+### With base image and tag
 
 ```bash
 $ npx docker-image --from node:14.10.1-alpine3.12 -t my-image
