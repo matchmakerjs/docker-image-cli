@@ -16,19 +16,24 @@ export async function buildNodeImage(options: {
     const _docker = cwd + `/.docker_${process.hrtime.bigint()}`;
     shell.rm('-rf', _docker + '/*');
     shell.mkdir(_docker);
+    process.once('beforeExit', () => shell.rm('-rf', _docker));
+
 
     const buffer = fs.readFileSync(cwd + '/package.json');
     const packageJson = JSON.parse(buffer.toString());
     delete packageJson.devDependencies;
     fs.writeFileSync(_docker + '/package.json', JSON.stringify(packageJson));
 
-    // shell.cp(cwd + '/package.json', _docker);
-
     shell.cp(cwd + '/.npmrc', _docker);
     shell.cd(_docker);
 
     const installStartTime = process.hrtime.bigint();
-    shell.exec('npm i --production --prefer-offline');
+    const command = ['npm', 'i', '--production', '--prefer-offline'];
+    if (argv.cache) {
+        const cache = argv.cache as string;
+        command.push('--cache', path.isAbsolute(cache) ? cache : path.join(cwd, cache));
+    }
+    shell.exec(command.join(' '));
     const installEndTime = process.hrtime.bigint();
 
     const files = [

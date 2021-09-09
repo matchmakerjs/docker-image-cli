@@ -1,8 +1,11 @@
 {
-  "name": "@olaleyeone/docker-image",
+  "name": "@matchmakerjs/docker-image-cli",
   "version": "0.0.1",
   "description": "Build docker image without Dockerfile",
   "main": "dist/cli.js",
+  "files": [
+    "dist/**/*"
+  ],
   "bin": {
     "docker-image": "dist/cli.js"
   },
@@ -12,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/olaleyeone/docker-image.git"
+    "url": "git+https://github.com/matchmakerjs/docker-image-cli.git"
   },
   "keywords": [
     "docker",
@@ -21,9 +24,9 @@
   "author": "Olaleye Afolabi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/olaleyeone/docker-image/issues"
+    "url": "https://github.com/matchmakerjs/docker-image-cli/issues"
   },
-  "homepage": "https://github.com/olaleyeone/docker-image#readme",
+  "homepage": "https://github.com/matchmakerjs/docker-image-cli#readme",
   "dependencies": {
     "shelljs": "^0.8.4",
     "yargs": "^16.2.0"

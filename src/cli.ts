@@ -30,4 +30,8 @@ yargs(process.argv.slice(2))
         description: 'Files to include in the image',
         default: 'dist'
     })
+    .option('cache', {
+        type: 'string',
+        description: 'The npm cache directory'
+    })
     .argv;
