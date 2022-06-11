@@ -3,6 +3,9 @@ docker-image helps you build docker images 😉, without having to create a Dock
 
 It currently supports node applications and by default expects the deployable files to be in ./dist.
 
+## Build
+`npm run tsc && chmod +x dist/cli.js && npm link -f`
+
 ## Installation
 
 ```bash

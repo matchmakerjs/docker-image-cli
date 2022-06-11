@@ -10,6 +10,7 @@ export function buildImage(options: {
     const argv = options.argv;
     const cwd = options.cwd;
     let imageName = argv.tag || argv.t;
+    let platform = argv.platform;
     if (!imageName) {
         if (argv.repository) {
             imageName = argv.repository + '/' + path.basename(cwd);
@@ -18,5 +19,9 @@ export function buildImage(options: {
         }
     }
     shell.cd(cwd);
-    shell.exec(`docker build -t ${imageName} -f ${options.dockerFile} .`);
+    let script = 'docker build';
+    if (platform) {
+        script = `${script} --platform ${platform}`;
+    }
+    shell.exec(`${script} -t ${imageName} -f ${options.dockerFile} .`);
 }

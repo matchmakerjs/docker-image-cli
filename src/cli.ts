@@ -19,6 +19,10 @@ yargs(process.argv.slice(2))
         description: 'The base image to use',
         default: 'node:14.10.1-alpine3.12'
     })
+    .option('platform', {
+        type: 'string',
+        description: 'The platform to use',
+    })
     .option('workDir', {
         type: 'string',
         description: 'The working directory',
